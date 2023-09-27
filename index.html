@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://nwrtalsyry.000webhostapp.com/Selvium/img/icon_title.ico" type="image/x-icon" />
+    <!-- style css-->
+    <link rel="stylesheet" href="https://nwrtalsyry.000webhostapp.com/Selvium/css/style.css">
+    
+    
+    <!-- normalize css -->
+    <link rel="stylesheet" href="https://nwrtalsyry.000webhostapp.com/Selvium/css/normalize.css">
+    <!-- Font Awesome Library -->
+    <link rel="stylesheet" href="https://nwrtalsyry.000webhostapp.com/Selvium/css/all.min.css">
+
+    <title> سلفيوم </title>
+</head>
+
+<body>
+
+   
+
+    <!-- Start header -->
+    <div class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">سلفيوم</a>
+            <ul class="main-nav">
+                <li><a href="#">الرئيسيه</a> </li>
+
+            
+
+             
+
+                <li><a href="#"> حول </a></li>
+                </li>
+                <li><a href="#">تسجيل دخول</a>
+
+                </li>
+
+
+            </ul>
+    
+        </div>
+   
+    </div>
+    <!-- end header -->
+
+    <!-- Start Landing -->
+    <div class="landing">
+        <div class="container">
+            <div class="text">
+                <h1> سلفيوم</h1>
+                <p>إنه ليس مجرد عطر، إنه نمط الحياة </p>
+            </div>
+            <div class="image">
+                <img id="imgslide" alt="">
+            </div>
+        </div>
+        <a href="#articles" class="go-down">
+            <i class="fas fa-angle-double-down fa-2x"></i>
+        </a>
+    </div>
+    <!-- End Landing -->
+
+    <!-- Start Articles -->
+    <div class="articles" id="articles">
+        <h2 class="main-title" id="main-title"> </h2>
+        <div class="container">
+            <select name="category" id="select">
+                <option value="كل المنتجات">كل المنتجات</option>
+            </select>
+        </div>
+        <div class="container" id="container">
+
+        </div>
+    </div>
+    <!-- End Articles -->
+
+
+
+    <script>
+        	// مصفوفه فيها أسما الصور الموجوده بمجلد
+	let imgArray=['0.jpg','1.jpg','2.jpg','3.jpg','4.jpg'];
+	
+	// جلب المتغير
+	let imgslide =document.getElementById ('imgslide')
+    i = 0;
+    imgslide.src =`https://nwrtalsyry.000webhostapp.com/Selvium/img/landing/img-slide/${imgArray[0]}`
+	// داله تشتغل كل مده معينه
+	setInterval (function (){
+	
+        if (i  >= imgArray.length) {
+    
+			i=0
+        }
+		// تغيير المسار من خلال تغيير السورس
+		imgslide.src =`https://nwrtalsyry.000webhostapp.com/Selvium//img/landing/img-slide/${imgArray[i]}`
+		// console.log(i);
+		i++;
+	}
+        , 2500)
+    </script>
+
+
+    <script>
+        const SAR = new Intl.NumberFormat('AR-US', {
+    style: 'currency',
+    currency: 'SAR',
+    maximumFractionDigits: 0,
+  });
+  let container = document.getElementById("container");
+  let main_title =document.getElementById ("main-title") ;
+  function getRepos() {
+    var myRequest = new XMLHttpRequest();
+  
+    myRequest.onreadystatechange = function () {
+      
+      
+        if (this.readyState === 4 && this.status === 200) {
+    
+            var myJSObject = JSON.parse(this.responseText);
+            var countMyJSObject = myJSObject.length;
+            let myText = '';
+  
+        
+  
+            for (var i = 0; i < countMyJSObject; i++) {
+              //   console.log(myJSObject[i]);
+                let ID =  myJSObject[i].IdProduct;
+                let name = myJSObject[i].product_name;
+                let Category_name = myJSObject[i].name;
+                let Price = myJSObject[i].Price;
+                let Image = myJSObject[i].Image ; 
+                let Description =myJSObject[i].Description;
+  
+                myText+= `
+                <div class="box" >
+                <img src="https://nwrtalsyry.000webhostapp.com/Selvium/img/imgbox/${Image}" alt="">
+                <div class="content">
+                    <h3>${SAR.format(Price)}</h3>
+                    <p>${Description} </p>
+               
+                </div>
+                <div class="info">
+                    <a href="#">${name}  </a>
+                  
+                </div>
+                <div class="info">
+                    <a href="#">${Category_name} </a>
+                    <I  onclick="addToCart(${ID})"  class="fa-solid fa-cart-shopping fa-fw c-bule"> </I>
+                </div>
+                   
+            </div>
+                
+                `;
+  
+      
+            }   
+            main_title.innerHTML = `كل المنتجات   (   ${countMyJSObject} )`;
+            container.innerHTML = myText ; 
+         
+        }
+  
+    
+    };
+  
+  
+    myRequest.open('GET', 'https://nwrtalsyry.000webhostapp.com/Selvium/Client/php/api_product.php', true);
+  
+    myRequest.send();
+  }
+  getRepos();
+  
+  
+  let title = document.title ;
+  // console.log(title)
+   // داله عرض البيانات بحسب الفئه 
+  function show(id_Category){
+    let tump = "";
+  
+    var myRequest = new XMLHttpRequest();
+  
+    myRequest.onreadystatechange = function () {
+      
+  
+        if (this.readyState === 4 && this.status === 200) {
+    
+          let myJSObject = JSON.parse(this.responseText);
+          let countMyJSObject = myJSObject.length;
+          let myText = '';
+          
+        
+              let count = 0 ;
+            for (var i = 0; i < countMyJSObject; i++) {
+          
+  
+              
+              //   console.log(myJSObject[i]);
+                let ID =  myJSObject[i].idProduct;
+                let name = myJSObject[i].product_name;
+                let Category_name = myJSObject[i].name;
+                let Price = myJSObject[i].Price;
+                let Image = myJSObject[i].Image ; 
+                let Description =myJSObject[i].Description;
+                if (id_Category == Category_name) {
+                myText+= `
+                <div class="box" >
+                <img src="https://nwrtalsyry.000webhostapp.com/Selvium/img/imgbox/${Image}" alt="">
+                <div class="content">
+                    <h3>${SAR.format(Price)}</h3>
+                    <p>${Description}</p>
+                </div>
+                <div class="info">
+                    <a href="#">${name}</a>
+               
+                </div>
+                <div class="info">
+                <a href="#">${Category_name} </a>
+                <I onclick="addToCart(${ID})"  class="fa-solid fa-cart-shopping fa-fw c-bule"> </I>
+               
+            </div>
+            </div>
+            
+                
+                `;
+                count++;
+              }
+              else if (id_Category == 'كل المنتجات') {
+                    getRepos();
+              }
+      
+            }   
+          
+            container.innerHTML = myText  ; 
+            main_title.innerHTML = `${id_Category} (   ${count} )`;
+            document.title = `${title}- ${id_Category}`; 
+            
+        }
+  
+    
+    };
+  
+  
+    myRequest.open('GET', 'https://nwrtalsyry.000webhostapp.com/Selvium/Client/php/api_product.php', true);
+  
+    myRequest.send();
+      //   console.log(id_Category) ;
+  
+     
+    
+    
+  }
+  
+  function select_category (){
+     
+    var myRequest = new XMLHttpRequest();
+  
+    myRequest.onreadystatechange = function () {
+      
+      
+        if (this.readyState === 4 && this.status === 200) {
+    
+            var myJSObject = JSON.parse(this.responseText);
+            var countMyJSObject = myJSObject.length;
+            let myText = '';
+  
+        
+  
+            for (var i = 0; i < countMyJSObject; i++) {
+              //   console.log(myJSObject[i]);
+                let ID =  myJSObject[i].IdCategory;
+                let name = myJSObject[i].name;
+                  
+                 myText+= `
+                          <option value="${name}" >${name} </option> 
+                          `;
+  
+            }   
+            let select = document.getElementById("select");
+            select.innerHTML += myText ; 
+            
+            select.addEventListener('change', (event) => {
+              // console.log(event.target.value );
+              show(event.target.value );
+            
+        
+            
+            });
+        }
+  
+    
+    };
+    myRequest.open('GET', 'https://nwrtalsyry.000webhostapp.com/Selvium/Client/php/api_category.php', true);
+    myRequest.send();
+  }
+  select_category();
+    </script>
+ 
+</body>
+
+</html>
